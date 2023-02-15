@@ -54,7 +54,7 @@ on:
         default: true
 
 env:
-  #PYTHONUNBUFFERED: true
+  PYTHONUNBUFFERED: true
   OS_APPLICATION_CREDENTIAL_ID: '7f5b64a265244623a3a933308569bdba'
   OS_APPLICATION_CREDENTIAL_SECRET: ${{ secrets.OS_APPLICATION_CREDENTIAL_SECRET }}
   OS_AUTH_TYPE: 'v3applicationcredential'
@@ -88,7 +88,7 @@ jobs:
         OS_IDENTITY_API_VERSION: 3
         OS_INTERFACE: 'public'
         OS_REGION_NAME: 'cern'
-        #PYTHONUNBUFFERED: true
+        PYTHONUNBUFFERED: true
 
     steps:
       - name: Checkout
@@ -106,7 +106,7 @@ jobs:
 
       - name: Pull Request Build
         if:   github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
-        run: ".github/workflows/rootci-installers/build_root.py
+        run: ".github/workflows/root-ci-config/build_root.py
                     --buildtype      ${{ matrix.config }}
                     --platform       ${{ matrix.image }}
                     --incremental    true
@@ -117,7 +117,7 @@ jobs:
 
       - name: Workflow dispatch/call
         if:   github.event_name == 'workflow_dispatch'
-        run: ".github/workflows/rootci-installers/build_root.py
+        run: ".github/workflows/root-ci-config/build_root.py
                     --buildtype      ${{ matrix.config }}
                     --platform       ${{ matrix.image }}
                     --incremental    ${{ inputs.incremental }}
@@ -128,7 +128,7 @@ jobs:
 
       - name: Nightly build
         if:   github.event_name == 'schedule'
-        run: ".github/workflows/rootci-installers/build_root.py
+        run: ".github/workflows/root-ci-config/build_root.py
                     --buildtype      ${{ matrix.config }}
                     --platform       ${{ matrix.image }}
                     --incremental    false
@@ -138,7 +138,7 @@ jobs:
 
       - name: Update artifacts after push to release branch
         if:   github.event_name == 'push'
-        run: ".github/workflows/rootci-installers/build_root.py
+        run: ".github/workflows/root-ci-config/build_root.py
                     --buildtype      ${{ matrix.config }}
                     --platform       ${{ matrix.image }}
                     --incremental    true

@@ -167,13 +167,23 @@ RooCmdArg Import(const std::map<std::string,RooDataHist*>&) ;
 RooCmdArg Import(TH1& histo, bool importDensity=false) ;
 
 // RooDataSet::ctor arguments
-RooCmdArg WeightVar(const char* name, bool reinterpretAsWeight=false) ;
+RooCmdArg WeightVar(const char* name="weight", bool reinterpretAsWeight=false) ;
 RooCmdArg WeightVar(const RooRealVar& arg, bool reinterpretAsWeight=false) ;
-RooCmdArg Import(const char* state, RooDataSet& data) ;
+RooCmdArg Import(const char* state, RooAbsData& data) ;
 RooCmdArg Import(const std::map<std::string,RooDataSet*>& ) ;
+template<class DataPtr_t>
+RooCmdArg Import(std::map<std::string,DataPtr_t> const& map) {
+    RooCmdArg container("ImportDataSliceMany",0,0,0,0,0,0,0,0) ;
+    for (auto const& item : map) {
+      container.addArg(Import(item.first.c_str(), *item.second)) ;
+    }
+    container.setProcessRecArgs(true,false) ;
+    return container ;
+}
+
 RooCmdArg Link(const char* state, RooAbsData& data) ;
 RooCmdArg Link(const std::map<std::string,RooAbsData*>&) ;
-RooCmdArg Import(RooDataSet& data) ;
+RooCmdArg Import(RooAbsData& data) ;
 RooCmdArg Import(TTree& tree) ;
 RooCmdArg ImportFromFile(const char* fname, const char* tname) ;
 RooCmdArg StoreError(const RooArgSet& aset) ;
